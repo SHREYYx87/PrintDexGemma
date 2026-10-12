@@ -1,0 +1,82 @@
+{
+  "entities": {
+    "User": {
+      "title": "User Profile",
+      "description": "Represents private user profile settings",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "email": { "type": "string" },
+        "displayName": { "type": "string" },
+        "theme": { "type": "string", "enum": ["light", "dark"] },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "email", "createdAt"]
+    },
+    "Transaction": {
+      "title": "Recent Transaction",
+      "description": "A transaction item displayed in the recent transactions section",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "category": { "type": "string" },
+        "amount": { "type": "number" },
+        "type": { "type": "string", "enum": ["income", "expense"] },
+        "timestamp": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "title", "category", "amount", "type", "timestamp"]
+    },
+    "Preset": {
+      "title": "Imposition Preset",
+      "description": "A saved imposition template layout preset",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "layoutType": { "type": "string" },
+        "sheetSize": { "type": "string" },
+        "hasMargin": { "type": "boolean" },
+        "marginMm": { "type": "number" },
+        "cornerRadiusMm": { "type": "number" },
+        "photoScaleType": { "type": "string" },
+        "customScaleW": { "type": "number" },
+        "customScaleH": { "type": "number" },
+        "slotCopies": { "type": "number" },
+        "slotRotation": { "type": "number" },
+        "slotScalePercent": { "type": "number" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "name", "layoutType", "sheetSize", "createdAt"]
+    },
+    "ActivityLog": {
+      "title": "Activity Log",
+      "description": "An activity log message displayed in the sidebar log widget",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "message": { "type": "string" },
+        "timestamp": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "message", "timestamp"]
+    }
+  },
+  "firestore": {
+    "users/{userId}": {
+      "schema": { "$ref": "#/entities/User" },
+      "description": "Stores user profiles and configuration settings"
+    },
+    "users/{userId}/transactions/{transactionId}": {
+      "schema": { "$ref": "#/entities/Transaction" },
+      "description": "Collection of transactions for each user"
+    },
+    "users/{userId}/presets/{presetId}": {
+      "schema": { "$ref": "#/entities/Preset" },
+      "description": "Collection of saved auto-imposition presets for each user"
+    },
+    "users/{userId}/activity_logs/{logId}": {
+      "schema": { "$ref": "#/entities/ActivityLog" },
+      "description": "Collection of workspace activity logs for each user"
+    }
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "name": "PrintDesk Mission Control",
+  "description": "A high-performance print shop automation system featuring document imposers, file pipeline standardizers, OCR/transcription correction with native Text-to-Speech playback, and active client intakes.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

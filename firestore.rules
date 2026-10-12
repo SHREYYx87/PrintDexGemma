@@ -1,0 +1,109 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // 1. Global Safety Net: Default deny everything
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Reusable Global Helpers
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isEmailVerified() {
+      return isSignedIn() && request.auth.token.email_verified == true;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    // Entity Validation Blueprints (Anti-Update-Gap)
+    function isValidUser(data) {
+      return data.keys().hasAll(['uid', 'email', 'createdAt'])
+        && data.keys().size() <= 5
+        && data.uid == request.auth.uid
+        && data.email == request.auth.token.email
+        && (data.theme == 'light' || data.theme == 'dark')
+        && data.createdAt == request.time;
+    }
+
+    function isValidTransaction(data) {
+      return data.keys().hasAll(['id', 'title', 'category', 'amount', 'type', 'timestamp'])
+        && data.keys().size() == 6
+        && data.id is string && data.id.size() <= 128
+        && data.title is string && data.title.size() <= 128
+        && data.category is string && data.category.size() <= 128
+        && (data.type == 'income' || data.type == 'expense')
+        && (data.amount is int || data.amount is float)
+        && data.timestamp == request.time;
+    }
+
+    function isValidPreset(data) {
+      return data.keys().hasAll(['id', 'name', 'layoutType', 'sheetSize', 'createdAt'])
+        && data.keys().size() <= 14
+        && data.id is string && data.id.size() <= 128
+        && data.name is string && data.name.size() <= 128
+        && data.layoutType is string && data.layoutType.size() <= 64
+        && data.sheetSize is string && data.sheetSize.size() <= 32
+        && data.createdAt == request.time;
+    }
+
+    function isValidActivityLog(data) {
+      return data.keys().hasAll(['id', 'message', 'timestamp'])
+        && data.keys().size() == 3
+        && data.id is string && data.id.size() <= 128
+        && data.message is string && data.message.size() <= 256
+        && data.timestamp == request.time;
+    }
+
+    // Match Collection Blocks
+    match /users/{userId} {
+      allow get: if isOwner(userId);
+      allow create: if isOwner(userId) && isEmailVerified() && isValidUser(incoming());
+      allow update: if isOwner(userId) && isEmailVerified() && isValidUser(incoming())
+        && incoming().uid == existing().uid
+        && incoming().createdAt == existing().createdAt;
+      allow delete: if isOwner(userId);
+
+      // Subcollection for transactions
+      match /transactions/{transactionId} {
+        allow get, list: if isOwner(userId);
+        allow create: if isOwner(userId) && isEmailVerified() && isValidId(transactionId) && isValidTransaction(incoming());
+        allow update: if isOwner(userId) && isEmailVerified() && isValidId(transactionId) && isValidTransaction(incoming())
+          && incoming().id == existing().id;
+        allow delete: if isOwner(userId) && isEmailVerified();
+      }
+
+      // Subcollection for presets
+      match /presets/{presetId} {
+        allow get, list: if isOwner(userId);
+        allow create: if isOwner(userId) && isEmailVerified() && isValidId(presetId) && isValidPreset(incoming());
+        allow update: if isOwner(userId) && isEmailVerified() && isValidId(presetId) && isValidPreset(incoming())
+          && incoming().id == existing().id;
+        allow delete: if isOwner(userId) && isEmailVerified();
+      }
+
+      // Subcollection for activity logs
+      match /activity_logs/{logId} {
+        allow get, list: if isOwner(userId);
+        allow create: if isOwner(userId) && isEmailVerified() && isValidId(logId) && isValidActivityLog(incoming());
+        allow delete: if isOwner(userId) && isEmailVerified();
+      }
+    }
+  }
+}

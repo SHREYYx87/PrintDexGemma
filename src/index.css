@@ -1,0 +1,304 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+  --color-popover: hsl(var(--popover));
+  --color-popover-foreground: hsl(var(--popover-foreground));
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+  --color-destructive: hsl(var(--destructive));
+  --color-destructive-foreground: hsl(var(--destructive-foreground));
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+}
+
+:root {
+    --background: 0 0% 100%;
+    --foreground: 240 10% 3.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 3.9%;
+    --primary: 240 5.9% 10%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 240 4.8% 95.9%;
+    --secondary-foreground: 240 5.9% 10%;
+    --muted: 240 4.8% 95.9%;
+    --muted-foreground: 240 3.8% 46.1%;
+    --accent: 240 4.8% 95.9%;
+    --accent-foreground: 240 5.9% 10%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 5.9% 90%;
+    --input: 240 5.9% 90%;
+    --ring: 240 5.9% 10%;
+    --radius: 0.5rem;
+
+    --r-xs: 0.5rem;
+    --r-sm: 0.75rem;
+    --r-md: 1rem;
+    --r-lg: 1.5rem;
+    --r-xl: 2rem;
+    --r-btn: 1.5rem;
+}
+
+.dark {
+    --background: 240 10% 3.9%;
+    --foreground: 0 0% 98%;
+    --card: 240 10% 5.5%;
+    --card-foreground: 0 0% 98%;
+    --popover: 240 10% 3.9%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 0 0% 98%;
+    --primary-foreground: 240 5.9% 10%;
+    --secondary: 240 3.7% 15.9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 240 3.7% 15.9%;
+    --muted-foreground: 240 5% 64.9%;
+    --accent: 240 3.7% 16.5%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 3.7% 18.5%;
+    --input: 240 3.7% 18.5%;
+    --ring: 240 4.9% 83.9%;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    color: hsl(var(--foreground));
+    background-color: hsl(var(--background));
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* PrintDesk Custom High-Fidelity Classes */
+.sidebar-nav {
+    background: hsl(var(--card));
+    border: 1px solid hsl(var(--border));
+    border-radius: var(--r-lg);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    padding: 12px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.nav-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    border-radius: var(--r-sm);
+    font-size: 13.5px;
+    font-weight: 500;
+    color: hsl(var(--muted-foreground));
+    cursor: pointer;
+    transition: all 0.15s ease;
+    width: 100%;
+    text-align: left;
+    background: transparent;
+    border: none;
+    font-family: 'Inter', sans-serif;
+    outline: none;
+}
+
+.nav-item:hover {
+    background: hsl(var(--accent));
+    color: hsl(var(--accent-foreground));
+    transform: translateX(2px);
+}
+
+.nav-item.active {
+    background: hsl(var(--accent));
+    color: hsl(var(--accent-foreground));
+    font-weight: 600;
+}
+
+.nav-section {
+    font-size: 11px;
+    font-weight: 700;
+    color: #9ca3af;
+    letter-spacing: 0.05em;
+    padding: 14px 14px 6px;
+    text-transform: uppercase;
+}
+
+.module-card {
+    border-radius: var(--r-xl);
+    background: hsl(var(--card));
+    border: 1px solid hsl(var(--border));
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 28px 24px 24px;
+    min-height: 220px;
+    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease, background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.module-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 48px -12px rgba(0, 0, 0, 0.1);
+}
+
+@keyframes marching-ants {
+    0% { background-position: 0 0, 100% 100%, 0 100%, 100% 0; }
+    100% { background-position: 40px 0, -40px 100%, 0 -40px, 100% 40px; }
+}
+
+.marching-ants {
+    border-radius: var(--r-xl);
+    background-image: 
+        linear-gradient(90deg, hsl(var(--muted-foreground)) 50%, transparent 50%), 
+        linear-gradient(90deg, hsl(var(--muted-foreground)) 50%, transparent 50%), 
+        linear-gradient(0deg, hsl(var(--muted-foreground)) 50%, transparent 50%), 
+        linear-gradient(0deg, hsl(var(--muted-foreground)) 50%, transparent 50%);
+    background-repeat: repeat-x, repeat-x, repeat-y, repeat-y;
+    background-size: 20px 2px, 20px 2px, 2px 20px, 2px 20px;
+    animation: marching-ants 0.5s linear infinite;
+    background-color: hsl(var(--muted));
+    background-position: 0 0, 100% 100%, 0 100%, 100% 0;
+}
+
+.drop-zone-active {
+    border-radius: var(--r-btn);
+    border: 2px dashed hsl(var(--primary));
+    background-color: hsl(var(--primary) / 0.08);
+    color: hsl(var(--primary));
+    height: 38px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    margin-top: 16px;
+}
+
+.document-drop-zone {
+    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.document-drop-zone:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 16px 36px -10px rgba(0, 0, 0, 0.08);
+}
+
+.document-drop-zone.active-drag {
+    transform: translateY(-3px);
+    box-shadow: 0 16px 36px -10px rgba(0, 0, 0, 0.12);
+}
+
+.card-desc {
+    flex: 1;
+    text-align: center;
+    font-size: 12px;
+    color: hsl(var(--muted-foreground));
+    line-height: 1.6;
+    margin-top: 8px;
+    margin-bottom: 12px;
+}
+
+.icon-wrap {
+    border-radius: var(--r-md);
+    background: hsl(var(--muted));
+    padding: 12px;
+    margin-bottom: 16px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s;
+}
+
+.btn-cfg {
+    margin-top: 16px;
+    padding: 10px 24px;
+    border-radius: var(--r-btn);
+    font-size: 12px;
+    font-weight: 600;
+    background: hsl(var(--primary));
+    color: hsl(var(--primary-foreground));
+    border: none;
+    cursor: pointer;
+    transition: background 0.15s, transform 0.1s;
+    width: 100%;
+    font-family: 'Inter', sans-serif;
+    text-align: center;
+}
+
+.btn-cfg:hover {
+    background: hsl(var(--primary) / 0.9);
+}
+
+.btn-cfg:active {
+    transform: scale(0.98);
+}
+
+.toast-box {
+    border-radius: var(--r-lg);
+    background: hsl(var(--primary));
+    color: hsl(var(--primary-foreground));
+    font-size: 14px;
+    font-weight: 500;
+    padding: 12px 20px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.22);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Custom imposer paper simulator styling */
+.paper-sheet-simulation {
+    aspect-ratio: 0.707; /* A4 Ratio */
+    background: hsl(var(--card));
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    border: 1px solid hsl(var(--border));
+    position: relative;
+    overflow: hidden;
+}
+
+.grid-guides {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    border: 1px dashed rgba(220, 38, 38, 0.4);
+}
+
+/* Custom LaTeX Invoice Layout Class */
+.latex-document {
+    background: hsl(var(--card));
+    font-family: 'Times New Roman', Times, serif;
+    color: hsl(var(--foreground));
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    line-height: 1.4;
+}
+
+/* Transition utility */
+.fade-in {
+    animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(4px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
