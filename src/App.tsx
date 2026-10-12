@@ -1,5 +1,10 @@
 import { AutoImposer } from "./components/AutoImposer";
 import { FormatStandardizer } from "./components/FormatStandardizer";
+import { TtsCorrection } from "./components/TtsCorrection";
+import { ClientIntake } from "./components/ClientIntake";
+import { AgentWatcher } from "./components/AgentWatcher";
+import { ClientDirectory } from "./components/ClientDirectory";
+import { SettingsView } from "./components/SettingsView";
 import React, { useState, useEffect, useRef } from "react";
 import { motion } from "motion/react";
 import { 
@@ -163,7 +168,11 @@ export default function App() {
             });
           }
         } catch (error) {
-          handleFirestoreError(error, OperationType.WRITE, `users/${user.uid}/transactions`);
+          try {
+            handleFirestoreError(error, OperationType.WRITE, `users/${user.uid}/transactions`);
+          } catch (err) {
+            console.warn("Firestore default transactions seed error:", err);
+          }
         }
       } else {
         const txs: any[] = [];
@@ -181,7 +190,11 @@ export default function App() {
         setTransactions(txs);
       }
     }, (error) => {
-      handleFirestoreError(error, OperationType.GET, `users/${user.uid}/transactions`);
+      try {
+        handleFirestoreError(error, OperationType.GET, `users/${user.uid}/transactions`);
+      } catch (err) {
+        console.warn("Firestore transactions sync warning:", err);
+      }
     });
 
     return () => unsubscribe();
@@ -222,7 +235,11 @@ export default function App() {
         setMessages(logs.slice(0, 5));
       }
     }, (error) => {
-      handleFirestoreError(error, OperationType.GET, `users/${user.uid}/activity_logs`);
+      try {
+        handleFirestoreError(error, OperationType.GET, `users/${user.uid}/activity_logs`);
+      } catch (err) {
+        console.warn("Firestore activity logs sync warning:", err);
+      }
     });
 
     return () => unsubscribe();
@@ -243,7 +260,11 @@ export default function App() {
           timestamp: serverTimestamp(),
         });
       } catch (error) {
-        handleFirestoreError(error, OperationType.WRITE, `users/${user.uid}/activity_logs/${id}`);
+        try {
+          handleFirestoreError(error, OperationType.WRITE, `users/${user.uid}/activity_logs/${id}`);
+        } catch (err) {
+          console.warn("Firestore addPrintLog write error:", err);
+        }
       }
     } else {
       setMessages(prev => [formattedLog, ...prev.filter(m => m !== formattedLog)].slice(0, 5));
@@ -338,7 +359,11 @@ export default function App() {
       setShowAddTx(false);
       triggerNotify("Transaction saved to Firestore");
     } catch (error) {
-      handleFirestoreError(error, OperationType.WRITE, `users/${user.uid}/transactions/${txId}`);
+      try {
+        handleFirestoreError(error, OperationType.WRITE, `users/${user.uid}/transactions/${txId}`);
+      } catch (err) {
+        console.warn("Firestore transaction write error:", err);
+      }
     }
   };
 
@@ -740,6 +765,10 @@ export default function App() {
                         } else if (card.id === "card-format-standardizer") {
                           setActiveItem("standardizer");
                           if (droppedFile) setStandardizerFile(droppedFile);
+                        } else if (card.id === "card-tts-correction") {
+                          setActiveItem("tts");
+                        } else if (card.id === "card-client-intake") {
+                          setActiveItem("intake");
                         } else {
                           triggerNotify(`Drop on ${card.notifyName}`);
                         }
@@ -763,6 +792,10 @@ export default function App() {
                               setActiveItem("imposer");
                             } else if (card.id === "card-format-standardizer") {
                               setActiveItem("standardizer");
+                            } else if (card.id === "card-tts-correction") {
+                              setActiveItem("tts");
+                            } else if (card.id === "card-client-intake") {
+                              setActiveItem("intake");
                             } else {
                               triggerNotify(card.notifyName);
                             }
@@ -1042,6 +1075,26 @@ export default function App() {
 
           {activeItem === "standardizer" && (
             <FormatStandardizer initialFile={standardizerFile} onLogPrint={addPrintLog} />
+          )}
+
+          {activeItem === "tts" && (
+            <TtsCorrection onLogPrint={addPrintLog} />
+          )}
+
+          {activeItem === "intake" && (
+            <ClientIntake onLogPrint={addPrintLog} />
+          )}
+
+          {activeItem === "watcher" && (
+            <AgentWatcher />
+          )}
+
+          {activeItem === "directory" && (
+            <ClientDirectory onLogPrint={addPrintLog} />
+          )}
+
+          {activeItem === "settings" && (
+            <SettingsView theme={theme} onToggleTheme={toggleTheme} userId={user?.uid} />
           )}
 
       </div>
