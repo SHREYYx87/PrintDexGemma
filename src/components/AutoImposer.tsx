@@ -125,7 +125,11 @@ export function AutoImposer({ initialFile, onLogPrint }: { initialFile?: File | 
       });
       setPresets(loaded);
     }, (error) => {
-      handleFirestoreError(error, OperationType.GET, `users/${user.uid}/presets`);
+      try {
+        handleFirestoreError(error, OperationType.GET, `users/${user.uid}/presets`);
+      } catch (err) {
+        console.warn("Firestore presets sync error:", err);
+      }
     });
 
     return () => unsubscribe();
@@ -155,7 +159,11 @@ export function AutoImposer({ initialFile, onLogPrint }: { initialFile?: File | 
       });
       setNewPresetName("");
     } catch (error) {
-      handleFirestoreError(error, OperationType.WRITE, `users/${user.uid}/presets/${presetId}`);
+      try {
+        handleFirestoreError(error, OperationType.WRITE, `users/${user.uid}/presets/${presetId}`);
+      } catch (err) {
+        console.warn("Firestore save preset error:", err);
+      }
     }
   };
 
@@ -178,7 +186,11 @@ export function AutoImposer({ initialFile, onLogPrint }: { initialFile?: File | 
     try {
       await deleteDoc(doc(db, "users", user.uid, "presets", presetId));
     } catch (error) {
-      handleFirestoreError(error, OperationType.DELETE, `users/${user.uid}/presets/${presetId}`);
+      try {
+        handleFirestoreError(error, OperationType.DELETE, `users/${user.uid}/presets/${presetId}`);
+      } catch (err) {
+        console.warn("Firestore delete preset error:", err);
+      }
     }
   };
 

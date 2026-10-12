@@ -27,9 +27,13 @@ export function SettingsView({ theme, onToggleTheme, userId }: SettingsViewProps
   const [saved, setSaved] = useState<boolean>(false);
 
   const handleSave = () => {
-    localStorage.setItem("printdesk_default_dpi", defaultDpi);
-    localStorage.setItem("printdesk_default_paper", defaultPaper);
-    localStorage.setItem("printdesk_bleed", bleedMargin);
+    try {
+      localStorage.setItem("printdesk_default_dpi", defaultDpi);
+      localStorage.setItem("printdesk_default_paper", defaultPaper);
+      localStorage.setItem("printdesk_bleed", bleedMargin);
+    } catch {
+      // Ignore storage write issues
+    }
     setSaved(true);
     setTimeout(() => setSaved(false), 2500);
   };

@@ -5,12 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>PrintDesk Mission Control</title>
     <script>
-      // Single Page App redirect for GitHub Pages
-      sessionStorage.redirect = location.href;
-      location.replace("./");
+      (function() {
+        var path = window.location.pathname;
+        var parts = path.split('/').filter(Boolean);
+        var repoBase = parts.length > 0 ? '/' + parts[0] + '/' : '/';
+        window.location.replace(repoBase);
+      })();
     </script>
   </head>
   <body>
-    <p>Redirecting to PrintDesk Mission Control...</p>
+    <div style="font-family: system-ui, sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; text-align: center; color: #4b5563;">
+      <p>Redirecting to PrintDesk Mission Control...</p>
+    </div>
   </body>
 </html>

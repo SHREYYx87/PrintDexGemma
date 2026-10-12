@@ -111,10 +111,16 @@ export default function App() {
   }, [user]);
 
   const [theme, setTheme] = useState<"light" | "dark">(() => {
-    if (typeof window !== "undefined") {
-      const saved = localStorage.getItem("theme") as "light" | "dark";
-      if (saved) return saved;
-      return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    try {
+      if (typeof window !== "undefined" && window.localStorage) {
+        const saved = localStorage.getItem("theme") as "light" | "dark";
+        if (saved) return saved;
+        if (window.matchMedia) {
+          return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+        }
+      }
+    } catch {
+      // Fallback if storage access is restricted
     }
     return "light";
   });
@@ -275,7 +281,11 @@ export default function App() {
     const root = window.document.documentElement;
     root.classList.remove("light", "dark");
     root.classList.add(theme);
-    localStorage.setItem("theme", theme);
+    try {
+      localStorage.setItem("theme", theme);
+    } catch {
+      // Ignore storage write issues
+    }
   }, [theme]);
 
   const toggleTheme = () => {
